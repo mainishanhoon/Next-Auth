@@ -25,7 +25,7 @@ export default function NavBar({ onNavItemClick }: NavBarProps) {
           )}
           onClick={onNavItemClick}
         >
-          <label.icon size={25} strokeWidth={2} />
+          <label.icon size={25} strokeWidth={3} />
           {label.name}
         </Link>
       ))}

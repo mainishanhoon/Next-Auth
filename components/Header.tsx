@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Menu, ShieldCheck } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 import NavBar from '@/components/NavBar';
+import DynamicBreadcrumb from './Breadcrumb';
 
 export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -19,8 +20,8 @@ export default function Header() {
         <div className="flex items-center">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="mr-2 lg:hidden">
-                <Menu size={30} />
+              <Button variant="ghost"  className="mr-2 lg:hidden p-2">
+                <Menu size={40} />
                 <span className="sr-only">Open menu</span>
               </Button>
             </DialogTrigger>
@@ -44,7 +45,7 @@ export default function Header() {
             </p>
           </Link>
         </div>
-
+        {/* {<DynamicBreadcrumb />} */}
         <div className="hidden flex-1 justify-center lg:flex">
           <NavBar onNavItemClick={() => {}} />
         </div>

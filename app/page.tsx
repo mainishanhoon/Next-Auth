@@ -2,16 +2,17 @@ import { Button } from '@/components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { LockKeyhole, LogIn } from 'lucide-react';
 import LoginButton from '../components/auth/LoginButton';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center space-y-6 bg-gradient-to-b from-blue-50 to-blue-400 dark:from-teal-800 dark:to-blue-800">
+    <section className="flex min-h-screen flex-col items-center justify-center space-y-6 bg-gradient-to-b from-background to-blue-400 dark:to-blue-500">
       <div className="flex items-center justify-center gap-2 p-3 text-2xl">
         <LockKeyhole
           strokeWidth={3}
-          className="size-16 p-3 rounded-2xl md:rounded-3xl bg-primary md:size-24 md:p-4 text-white"
+          className="size-14 rounded-2xl bg-primary p-3 text-white md:size-24 md:rounded-3xl md:p-4"
         />
-        <p className="text-6xl md:text-8xl font-bold tracking-wider">
+        <p className="text-5xl font-bold tracking-wider md:text-8xl">
           Next<span className="text-primary">Auth</span>
         </p>
       </div>
@@ -21,21 +22,25 @@ export default function Home() {
             <h1 className="font-bold text-primary max-sm:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
               <span className="text-foreground">
                 Enter your&nbsp;
-                <span className="rounded-xl bg-muted px-2 text-primary">
+                <span className="rounded-xl bg-muted px-2 text-primary/50">
                   credentials
                 </span>
                 &nbsp;to access your account
               </span>
             </h1>
             <p className="mx-auto max-w-[850px] font-bold tracking-wide text-foreground md:text-2xl">
-              Protect your users and data with our robust, easy-to-implement
-              authentication services.
+              Welcome to Next-Auth. This is a public route showcasing the
+              authentication system.
             </p>
           </div>
-          <div className="space-x-4">
+          <div className="flex space-x-4">
             <LoginButton>
-              <Button variant="default" size="lg" className="gap-2 p-5 text-xl">
-                <LogIn size={25} strokeWidth={3} />
+              <Button
+                variant="default"
+                size="lg"
+                className="gap-2 p-5 text-xl text-white"
+              >
+                <LogIn className="size-6" strokeWidth={3} />
                 <p>Sign In</p>
               </Button>
             </LoginButton>
@@ -44,6 +49,7 @@ export default function Home() {
               <p>GitHub</p>
             </Button>
           </div>
+          <ThemeToggle />
           <div className="flex space-x-2 text-3xl font-bold">
             <p>Prisma</p>
             <p>Prisma</p>

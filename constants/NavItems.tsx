@@ -1,21 +1,20 @@
 import {
-  Cog,
-  HandCoins,
-  LayoutGrid,
+  LogIn,
   NotepadText,
+  Users2,
   Warehouse,
 } from 'lucide-react';
 
 export const NavItems = [
   {
-    name: 'Dashboard',
-    href: '/dashboard',
-    icon: LayoutGrid,
+    name: 'Sign In',
+    href: '/auth/signIn',
+    icon: LogIn,
   },
   {
-    name: 'Budgetary',
-    href: '/dashboard/budgetary',
-    icon: HandCoins,
+    name: 'Sign Up',
+    href: '/auth/signUp',
+    icon: Users2,
   },
   {
     name: 'Inventory',
