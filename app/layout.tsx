@@ -4,7 +4,6 @@ import './globals.css';
 import NextTopLoader from 'nextjs-toploader';
 import ThemeProvider from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
-import Header from '@/components/Header';
 
 const montserrat = localFont({
   src: './fonts/Montserrat.woff',

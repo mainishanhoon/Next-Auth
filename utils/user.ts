@@ -1,4 +1,4 @@
-import prisma from '@/utils/db';
+import { prisma } from '@/prisma/prisma';
 
 export async function getUserByEmail(email: string) {
   try {

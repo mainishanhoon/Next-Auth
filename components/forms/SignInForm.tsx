@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { LockIcon, MailIcon } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
 import FormSuccess from '../auth/FormSuccess';
-import { signIn } from '@/utils/actions';
+import { SignIn } from '@/utils/actions';
 
 export default function SignInForm() {
   const [isPending, startTransition] = useTransition();
@@ -40,7 +40,7 @@ export default function SignInForm() {
     setSuccess('');
 
     startTransition(() => {
-      signIn(values).then((data) => {
+      SignIn(values).then((data) => {
         setError(data.error);
         setSuccess(data.success);
       });

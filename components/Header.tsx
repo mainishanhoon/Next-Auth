@@ -21,7 +21,7 @@ export default function Header() {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="ghost"  className="mr-2 lg:hidden p-2">
-                <Menu size={40} />
+                <Menu size={30} />
                 <span className="sr-only">Open menu</span>
               </Button>
             </DialogTrigger>

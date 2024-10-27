@@ -21,9 +21,9 @@ import { Button } from '@/components/ui/button';
 import { LockIcon, MailIcon, UserRound } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
 import FormSuccess from '../auth/FormSuccess';
-import { signUp } from '@/utils/actions';
+import { SignUp } from '@/utils/actions';
 
-export default function SignInForm() {
+export default function SignUpForm() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
@@ -41,7 +41,7 @@ export default function SignInForm() {
     setSuccess('');
 
     startTransition(() => {
-      signUp(values).then((data) => {
+      SignUp(values).then((data) => {
         setError(data.error);
         setSuccess(data.success);
       });
