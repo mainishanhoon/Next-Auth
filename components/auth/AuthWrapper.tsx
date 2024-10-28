@@ -8,8 +8,10 @@ import {
 } from '@/components/ui/card';
 import Social from './Social';
 import BackButton from './BackButton';
+import { LockKeyhole } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
-interface CardWrapperProps {
+interface AuthWrapperProps {
   children: React.ReactNode;
   headerLabel: string;
   backButtonLabel: string;
@@ -17,16 +19,26 @@ interface CardWrapperProps {
   showSocial?: boolean;
 }
 
-export default function CardWrapper({
+export default function AuthWrapper({
   children,
   headerLabel,
   backButtonLabel,
   backButtonHref,
   showSocial,
-}: CardWrapperProps) {
+}: AuthWrapperProps) {
   return (
-    <Card className="w-[500px] shadow-md bg-muted">
-      <CardHeader className='text-3xl'>{headerLabel}</CardHeader>
+    <Card className="w-full md:max-w-xl bg-muted shadow-md">
+      <div className="flex items-center justify-center gap-2 p-3">
+        <LockKeyhole
+          strokeWidth={3}
+          className="size-10 rounded-xl bg-primary p-1.5  text-white"
+        />
+        <p className="text-3xl font-bold tracking-wider">
+          Next<span className="text-primary">Auth</span>
+        </p>
+      </div>
+      <Separator />
+      <CardHeader className="text-xl md:text-3xl text-center">{headerLabel}</CardHeader>
       <CardContent>{children}</CardContent>
       {showSocial && (
         <CardFooter>

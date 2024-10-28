@@ -1,7 +1,7 @@
 'use client';
 
 import PageContainer from '@/components/PageContainer';
-import CardWrapper from '@/components/auth/AuthWrapper';
+import AuthWrapper from '@/components/auth/AuthWrapper';
 import { useState, useTransition } from 'react';
 import * as z from 'zod';
 import { SignInSchema } from '@/schema/zod';
@@ -21,9 +21,15 @@ import { Button } from '@/components/ui/button';
 import { LockIcon, MailIcon } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
 import FormSuccess from '../auth/FormSuccess';
-import { SignIn } from '@/utils/actions';
+import { SignIn } from '@/actions/signIn';
+import { useSearchParams } from 'next/navigation';
 
 export default function SignInForm() {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get('error') === 'OAuthAccountNotLinked'
+      ? 'User with this Email already exists'
+      : '';
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
@@ -41,16 +47,16 @@ export default function SignInForm() {
 
     startTransition(() => {
       SignIn(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   }
 
   return (
     <PageContainer scrollable>
-      <div className="flex items-center justify-center sm:mt-16">
-        <CardWrapper
+      <div className="flex items-center justify-center">
+        <AuthWrapper
           headerLabel="Access your Account"
           backButtonLabel="Don't have an account?"
           backButtonHref="/auth/signUp"
@@ -112,7 +118,7 @@ export default function SignInForm() {
                   )}
                 />
               </div>
-              <FormError message={error} />
+              <FormError message={error || urlError} />
               <FormSuccess message={success} />
               <Button
                 disabled={isPending}
@@ -123,7 +129,7 @@ export default function SignInForm() {
               </Button>
             </Form>
           </ShadcnForm>
-        </CardWrapper>
+        </AuthWrapper>
       </div>
     </PageContainer>
   );

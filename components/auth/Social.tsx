@@ -1,18 +1,25 @@
 'use client';
 
+import { signIn } from '@/auth';
 import { FcGoogle } from 'react-icons/fc';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
-
 import { Button } from '@/components/ui/button';
+import { SIGNIN_REDIRECT_ROUTE } from '@/routes';
 
 export default function Social() {
+  const onClick = (provider: 'google' | 'github') => {
+    signIn(provider, {
+      callbackUrl: SIGNIN_REDIRECT_ROUTE,
+    });
+  };
+
   return (
     <div className="flex w-full items-center gap-x-2">
       <Button
         size="lg"
         className="w-full hover:border-2 hover:border-muted-foreground"
         variant="outline"
-        onClick={() => {}}
+        onClick={() => onClick('google')}
       >
         <FcGoogle className="size-5" />
       </Button>
@@ -20,7 +27,7 @@ export default function Social() {
         size="lg"
         className="w-full hover:border-2 hover:border-muted-foreground"
         variant="outline"
-        onClick={() => {}}
+        onClick={() => onClick('github')}
       >
         <GitHubLogoIcon className="size-5" />
       </Button>

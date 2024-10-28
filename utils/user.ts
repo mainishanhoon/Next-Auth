@@ -1,4 +1,4 @@
-import { prisma } from '@/prisma/prisma';
+import { prisma } from '@/utils/prisma';
 
 export async function getUserByEmail(email: string) {
   try {
@@ -9,7 +9,7 @@ export async function getUserByEmail(email: string) {
   }
 }
 
-export async function getUserById(id: string) {
+export async function getUserById(id: string | undefined) {
   try {
     const user = await prisma.user.findUnique({ where: { id } });
     return user;

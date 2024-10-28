@@ -1,7 +1,7 @@
 'use client';
 
 import PageContainer from '@/components/PageContainer';
-import CardWrapper from '@/components/auth/AuthWrapper';
+import AuthWrapper from '@/components/auth/AuthWrapper';
 import { useState, useTransition } from 'react';
 import * as z from 'zod';
 import { SignUpSchema } from '@/schema/zod';
@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { LockIcon, MailIcon, UserRound } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
 import FormSuccess from '../auth/FormSuccess';
-import { SignUp } from '@/utils/actions';
+import { SignUp } from '@/actions/signUp';
 
 export default function SignUpForm() {
   const [isPending, startTransition] = useTransition();
@@ -42,16 +42,16 @@ export default function SignUpForm() {
 
     startTransition(() => {
       SignUp(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   }
 
   return (
     <PageContainer scrollable>
-      <div className="flex items-center justify-center sm:mt-5">
-        <CardWrapper
+      <div className="flex items-center justify-center">
+        <AuthWrapper
           headerLabel="Create your Account"
           backButtonLabel="Already have an Account !"
           backButtonHref="/auth/signIn"
@@ -148,7 +148,7 @@ export default function SignUpForm() {
               </Button>
             </Form>
           </ShadcnForm>
-        </CardWrapper>
+        </AuthWrapper>
       </div>
     </PageContainer>
   );

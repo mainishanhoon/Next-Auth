@@ -1,9 +1,4 @@
-import {
-  LogIn,
-  NotepadText,
-  Users2,
-  Warehouse,
-} from 'lucide-react';
+import { AlertTriangle, LogIn, NotepadText, Users2 } from 'lucide-react';
 
 export const NavItems = [
   {
@@ -17,9 +12,9 @@ export const NavItems = [
     icon: Users2,
   },
   {
-    name: 'Inventory',
-    href: '/dashboard/inventory',
-    icon: Warehouse,
+    name: 'Error',
+    href: '/auth/error',
+    icon: AlertTriangle,
   },
   {
     name: 'Food Planner',

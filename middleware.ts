@@ -19,21 +19,21 @@ export default middleware((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
-    return null;
+    return undefined;
   }
 
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(new URL(SIGNIN_REDIRECT_ROUTE, nextUrl));
     }
-    return null;
+    return undefined;
   }
 
   if (!isLoggedIn && !isPublicRoute) {
     return Response.redirect(new URL('/auth/signIn', nextUrl));
   }
 
-  return null;
+  return undefined;
 });
 
 export const config = {

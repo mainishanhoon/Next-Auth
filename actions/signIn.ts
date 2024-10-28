@@ -1,13 +1,13 @@
 'use server';
 
 import * as z from 'zod';
-import { SignInSchema, SignUpSchema } from '@/schema/zod';
-import bcrypt from 'bcryptjs';
-import { prisma } from '@/prisma/prisma';
+import { SignInSchema } from '@/schema/zod';
 import { getUserByEmail } from '@/utils/user';
 import { signIn } from '@/auth';
-import { SIGNIN_REDIRECT_ROUTE } from '../routes';
+import { SIGNIN_REDIRECT_ROUTE } from '@/routes';
 import { AuthError } from 'next-auth';
+import { generateVerificationToken } from '@/lib/genToken';
+import { sendVerificationEmail } from '@/app/api/send/route';
 
 export async function SignIn(values: z.infer<typeof SignInSchema>) {
   const validatedFields = SignInSchema.safeParse(values);
@@ -17,6 +17,24 @@ export async function SignIn(values: z.infer<typeof SignInSchema>) {
   }
 
   const { email, password } = validatedFields.data;
+
+  const userExists = await getUserByEmail(email);
+
+  if (!userExists || !userExists.email || !userExists.password) {
+    return { error: 'Email does not exists' };
+  }
+
+  if (!userExists.emailVerified) {
+    const verificationToken = await generateVerificationToken(userExists.email);
+
+    await sendVerificationEmail(
+      userExists.name,
+      verificationToken.email,
+      verificationToken.token,
+    );
+
+    return { success: 'Confirmation email sent!' };
+  }
 
   try {
     await signIn('credentials', {
@@ -36,31 +54,4 @@ export async function SignIn(values: z.infer<typeof SignInSchema>) {
   }
 
   return { success: 'Email Sent' };
-}
-
-export async function SignUp(values: z.infer<typeof SignUpSchema>) {
-  const validatedFields = SignUpSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { error: 'Invalid Fields' };
-  }
-
-  const { email, password, name } = validatedFields.data;
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const userExists = await getUserByEmail(email);
-
-  if (userExists) {
-    return { error: 'User exists with this Email' };
-  }
-
-  await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
-  });
-
-  return { success: 'User Created' };
 }
