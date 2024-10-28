@@ -7,7 +7,7 @@ import { signIn } from '@/auth';
 import { SIGNIN_REDIRECT_ROUTE } from '@/routes';
 import { AuthError } from 'next-auth';
 import { generateVerificationToken } from '@/lib/genToken';
-import { sendVerificationEmail } from '@/app/api/send/route';
+import { POST } from '@/app/api/send/route';
 
 export async function SignIn(values: z.infer<typeof SignInSchema>) {
   const validatedFields = SignInSchema.safeParse(values);
@@ -27,7 +27,7 @@ export async function SignIn(values: z.infer<typeof SignInSchema>) {
   if (!userExists.emailVerified) {
     const verificationToken = await generateVerificationToken(userExists.email);
 
-    await sendVerificationEmail(
+    await POST(
       userExists.name,
       verificationToken.email,
       verificationToken.token,

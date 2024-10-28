@@ -2,12 +2,11 @@
 
 import PageContainer from '@/components/PageContainer';
 import AuthWrapper from '@/components/auth/AuthWrapper';
-import { useState, useTransition } from 'react';
+import { useState, useTransition, Suspense } from 'react';
 import * as z from 'zod';
 import { SignInSchema } from '@/schema/zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Form from 'next/form';
 import {
   Form as ShadcnForm,
   FormControl,
@@ -25,6 +24,14 @@ import { SignIn } from '@/actions/signIn';
 import { useSearchParams } from 'next/navigation';
 
 export default function SignInForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInFormContent />
+    </Suspense>
+  );
+}
+
+function SignInFormContent() {
   const searchParams = useSearchParams();
   const urlError =
     searchParams.get('error') === 'OAuthAccountNotLinked'
@@ -63,11 +70,7 @@ export default function SignInForm() {
           showSocial
         >
           <ShadcnForm {...form}>
-            <Form
-              action=""
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-4">
                 <FormField
                   control={form.control}
@@ -127,7 +130,7 @@ export default function SignInForm() {
               >
                 Login
               </Button>
-            </Form>
+            </form>
           </ShadcnForm>
         </AuthWrapper>
       </div>
