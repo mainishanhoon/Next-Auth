@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LockIcon, MailIcon, UserRound } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
-import FormSuccess from '../auth/FormSuccess';
+import FormSuccess from '@/components/auth/FormSuccess';
 import { SignUp } from '@/actions/signUp';
 
 export default function SignUpForm() {
@@ -50,9 +50,9 @@ export default function SignUpForm() {
 
   return (
     <PageContainer scrollable>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center md:w-dvw">
         <AuthWrapper
-          headerLabel="Create your Account"
+          headerLabel="Create Your Account"
           backButtonLabel="Already have an Account !"
           backButtonHref="/auth/signIn"
           showSocial
@@ -144,7 +144,7 @@ export default function SignUpForm() {
                 type="submit"
                 className="w-full text-xl"
               >
-                Create an Account
+                Sign Up
               </Button>
             </Form>
           </ShadcnForm>

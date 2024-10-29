@@ -6,8 +6,17 @@ import { getUserByEmail } from '@/utils/user';
 import { signIn } from '@/auth';
 import { SIGNIN_REDIRECT_ROUTE } from '@/routes';
 import { AuthError } from 'next-auth';
-import { generateVerificationToken } from '@/lib/genToken';
-import { POST } from '@/app/api/send/route';
+import {
+  sendVerificationEmail,
+  sendTwoFactorAuthenticationEmail,
+} from '@/app/api/send/route';
+import {
+  generateVerificationToken,
+  generateTwoFactorToken,
+} from '@/lib/genToken';
+import { prisma } from '@/utils/prisma';
+import { getTwoFactorConfirmationByUserId } from '@/actions/twoFactor';
+import { getTwoFactorTokenByEmail } from '@/utils/twoFactorToken';
 
 export async function SignIn(values: z.infer<typeof SignInSchema>) {
   const validatedFields = SignInSchema.safeParse(values);
@@ -16,7 +25,7 @@ export async function SignIn(values: z.infer<typeof SignInSchema>) {
     return { error: 'Invalid Fields' };
   }
 
-  const { email, password } = validatedFields.data;
+  const { email, password, code } = validatedFields.data;
 
   const userExists = await getUserByEmail(email);
 
@@ -27,15 +36,60 @@ export async function SignIn(values: z.infer<typeof SignInSchema>) {
   if (!userExists.emailVerified) {
     const verificationToken = await generateVerificationToken(userExists.email);
 
-    await POST(
+    await sendVerificationEmail(
       userExists.name,
       verificationToken.email,
       verificationToken.token,
     );
 
-    return { success: 'Confirmation email sent!' };
+    return { success: 'Verification Email Sent!' };
   }
 
+  if (userExists.isTwoFactorEnabled && userExists.email) {
+    if (code) {
+      const twoFactorToken = await getTwoFactorTokenByEmail(userExists.email);
+
+      if (!twoFactorToken) {
+        return { error: 'Invalid OTP' };
+      }
+      if (twoFactorToken.token !== code) {
+        return { error: 'Invalid OTP' };
+      }
+
+      const hasExpired = new Date(twoFactorToken.expires) < new Date();
+
+      if (hasExpired) {
+        return { error: 'OTP has Expired!' };
+      }
+
+      await prisma.twoFactorToken.delete({
+        where: { id: twoFactorToken.id },
+      });
+
+      const existingConfirmation = await getTwoFactorConfirmationByUserId(
+        userExists.id,
+      );
+
+      if (existingConfirmation) {
+        await prisma.twoFactorConfirmation.delete({
+          where: { id: existingConfirmation.id },
+        });
+      }
+
+      await prisma.twoFactorConfirmation.create({
+        data: { userId: userExists.id },
+      });
+    } else {
+      const twoFactorToken = await generateTwoFactorToken(userExists.email);
+
+      await sendTwoFactorAuthenticationEmail(
+        twoFactorToken.email,
+        twoFactorToken.token,
+      );
+
+      return { twoFactor: true };
+    }
+  }
   try {
     await signIn('credentials', {
       email,
@@ -53,5 +107,5 @@ export async function SignIn(values: z.infer<typeof SignInSchema>) {
     }
   }
 
-  return { success: 'Email Sent' };
+  return { success: 'Welcome to the Next-Auth' };
 }

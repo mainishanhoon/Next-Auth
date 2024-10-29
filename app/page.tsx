@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { LockKeyhole, LogIn } from 'lucide-react';
-import LoginButton from '../components/auth/LoginButton';
+import SignInButton from '@/components/auth/SignInButton';
 import ThemeToggle from '@/components/ThemeToggle';
 import Link from 'next/link';
 
@@ -35,7 +35,7 @@ export default function Home() {
             </p>
           </div>
           <div className="flex space-x-4">
-            <LoginButton>
+            <SignInButton>
               <Button
                 variant="default"
                 size="lg"
@@ -44,7 +44,7 @@ export default function Home() {
                 <LogIn className="size-6" strokeWidth={3} />
                 <p>Sign In</p>
               </Button>
-            </LoginButton>
+            </SignInButton>
             <Link href={'https://github.com/mainishanhoon/Next-Auth'}>
               <Button variant="outline" size="lg" className="gap-2 p-5 text-xl">
                 <GitHubLogoIcon className="size-6" />

@@ -1,6 +1,16 @@
 import AuthError from '@/components/auth/AuthError';
 import PageContainer from '@/components/PageContainer';
 import { LockKeyhole } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CircleUserRound } from 'lucide-react';
 
 export default function AuthErrorPage() {
   return (

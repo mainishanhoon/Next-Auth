@@ -1,21 +1,22 @@
-import { auth, signOut } from '@/auth';
-import { Button } from '@/components/ui/button';
-import Form from 'next/form';
+'use client';
 
-export default async function SettingsPage() {
-  const session = await auth();
+import { Button } from '@/components/ui/button';
+import SignOut from '@/actions/signOut';
+import { useCurrentUser } from '@/hooks/UserContext';
+
+export default function SettingsPage() {
+  const user = useCurrentUser();
+
+  function onSubmit() {
+    SignOut();
+  }
 
   return (
     <div>
-      {JSON.stringify(session)}
-      <Form
-        action={async () => {
-          'use server';
-          await signOut();
-        }}
-      >
-        <Button type="submit">Sign Out</Button>
-      </Form>
+      {JSON.stringify(user)}
+      <Button onClick={onSubmit} variant="destructive" type="submit">
+        Sign Out
+      </Button>
     </div>
   );
 }

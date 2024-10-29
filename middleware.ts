@@ -1,14 +1,10 @@
 import { auth as middleware } from '@/auth';
-import authConfig from '@/auth.config';
-import NextAuth from 'next-auth';
 import {
   SIGNIN_REDIRECT_ROUTE,
   apiAuthPrefix,
   authRoutes,
   publicRoutes,
 } from '@/routes';
-
-const { auth } = NextAuth(authConfig);
 
 export default middleware((req) => {
   const { nextUrl } = req;
@@ -32,6 +28,8 @@ export default middleware((req) => {
   if (!isLoggedIn && !isPublicRoute) {
     return Response.redirect(new URL('/auth/signIn', nextUrl));
   }
+
+  //VERIFICATion
 
   return undefined;
 });

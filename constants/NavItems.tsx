@@ -1,24 +1,24 @@
-import { AlertTriangle, LogIn, NotepadText, Users2 } from 'lucide-react';
+import { Cog, OctagonAlert, ServerCog, UsersRound } from 'lucide-react';
 
 export const NavItems = [
   {
-    name: 'Sign In',
-    href: '/auth/signIn',
-    icon: LogIn,
+    name: 'Server',
+    href: '/server',
+    icon: ServerCog,
   },
   {
-    name: 'Sign Up',
-    href: '/auth/signUp',
-    icon: Users2,
+    name: 'Client',
+    href: '/client',
+    icon: UsersRound,
   },
   {
-    name: 'Error',
-    href: '/auth/error',
-    icon: AlertTriangle,
+    name: 'Admin',
+    href: '/admin',
+    icon: OctagonAlert,
   },
   {
-    name: 'Food Planner',
-    href: '/dashboard/planner',
-    icon: NotepadText,
+    name: 'Settings',
+    href: '/settings',
+    icon: Cog,
   },
 ];

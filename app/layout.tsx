@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
+import { SessionProvider } from 'next-auth/react';
+import { auth } from '@/auth';
 import NextTopLoader from 'nextjs-toploader';
 import ThemeProvider from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
   description: 'Made by @mainishanhoon',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -28,15 +30,17 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster richColors closeButton />
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster richColors closeButton />
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

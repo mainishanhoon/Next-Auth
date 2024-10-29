@@ -2,7 +2,7 @@
 
 import PageContainer from '@/components/PageContainer';
 import AuthWrapper from '@/components/auth/AuthWrapper';
-import { useState, useTransition, Suspense } from 'react';
+import { useState, useTransition } from 'react';
 import * as z from 'zod';
 import { SignInSchema } from '@/schema/zod';
 import { useForm } from 'react-hook-form';
@@ -19,24 +19,24 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LockIcon, MailIcon } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
-import FormSuccess from '../auth/FormSuccess';
+import FormSuccess from '@/components/auth/FormSuccess';
 import { SignIn } from '@/actions/signIn';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 
 export default function SignInForm() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SignInFormContent />
-    </Suspense>
-  );
-}
-
-function SignInFormContent() {
   const searchParams = useSearchParams();
   const urlError =
     searchParams.get('error') === 'OAuthAccountNotLinked'
       ? 'User with this Email already exists'
       : '';
+  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
@@ -45,6 +45,7 @@ function SignInFormContent() {
     defaultValues: {
       email: '',
       password: '',
+      code: '',
     },
   });
 
@@ -53,18 +54,31 @@ function SignInFormContent() {
     setSuccess('');
 
     startTransition(() => {
-      SignIn(values).then((data) => {
-        setError(data?.error);
-        setSuccess(data?.success);
-      });
+      SignIn(values)
+        .then((data) => {
+          if (data?.error) {
+            form.reset();
+            setError(data.error);
+          }
+
+          if (data?.success) {
+            form.reset();
+            setSuccess(data.success);
+          }
+
+          if (data?.twoFactor) {
+            setShowTwoFactor(true);
+          }
+        })
+        .catch(() => setError('Something went Wrong!!'));
     });
   }
 
   return (
     <PageContainer scrollable>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center md:w-dvw">
         <AuthWrapper
-          headerLabel="Access your Account"
+          headerLabel="Access Your Account!"
           backButtonLabel="Don't have an account?"
           backButtonHref="/auth/signUp"
           showSocial
@@ -72,64 +86,124 @@ function SignInFormContent() {
           <ShadcnForm {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-lg font-bold text-foreground">
-                        Email
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            {...field}
-                            disabled={isPending}
-                            type="email"
-                            placeholder="lorem@ipsum.com"
-                            className="pl-10 tracking-wider placeholder:tracking-wide"
-                          />
-                          <MailIcon className="absolute left-3 top-2 size-5 text-muted-foreground" />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-lg font-bold text-foreground">
-                        Password
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            {...field}
-                            disabled={isPending}
-                            type="password"
-                            placeholder="Password"
-                            className="pl-10 tracking-wider placeholder:tracking-wide"
-                          />
-                          <LockIcon className="absolute left-3 top-2 size-5 text-muted-foreground" />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {showTwoFactor ? (
+                  <>
+                    <p className="text-md text-center font-bold tracking-wide text-muted-foreground">
+                      Enter the verification code sent to your email
+                    </p>
+                    <FormField
+                      control={form.control}
+                      name="code"
+                      render={({ field }) => (
+                        <FormItem className="text-center">
+                          <FormLabel className="text-xl font-bold text-foreground">
+                            Verification Code
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex justify-center">
+                              <InputOTP
+                                maxLength={6}
+                                onChange={(value) => field.onChange(value)}
+                              >
+                                <InputOTPGroup>
+                                  <InputOTPSlot index={0} />
+                                  <InputOTPSlot index={1} />
+                                  <InputOTPSlot index={2} />
+                                  <InputOTPSlot index={3} />
+                                  <InputOTPSlot index={4} />
+                                  <InputOTPSlot index={5} />
+                                </InputOTPGroup>
+                              </InputOTP>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-lg font-bold text-foreground">
+                            Email
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                disabled={isPending}
+                                type="email"
+                                placeholder="lorem@ipsum.com"
+                                className="pl-10 tracking-wider placeholder:tracking-wide"
+                              />
+                              <MailIcon className="absolute left-3 top-2 size-5 text-muted-foreground" />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-lg font-bold text-foreground">
+                            Password
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                disabled={isPending}
+                                type="password"
+                                placeholder="Password"
+                                className="pl-10 tracking-wider placeholder:tracking-wide"
+                              />
+                              <LockIcon className="absolute left-3 top-2 size-5 text-muted-foreground" />
+                            </div>
+                          </FormControl>
+                          <Button
+                            size="lg"
+                            variant="link"
+                            className="px-0 font-bold decoration-dashed decoration-2 underline-offset-4 hover:underline"
+                          >
+                            <Link href="/auth/resetPassword">
+                              Forgot Password?
+                            </Link>
+                          </Button>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
               </div>
               <FormError message={error || urlError} />
               <FormSuccess message={success} />
-              <Button
-                disabled={isPending}
-                type="submit"
-                className="w-full text-xl"
-              >
-                Login
-              </Button>
+              {showTwoFactor ? (
+                <div className="flex justify-center">
+                  <Button
+                    disabled={isPending}
+                    type="submit"
+                    className="px-8 text-xl"
+                  >
+                    Verify OTP
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  disabled={isPending}
+                  type="submit"
+                  className="w-full text-xl"
+                >
+                  Sign In
+                </Button>
+              )}
             </form>
           </ShadcnForm>
         </AuthWrapper>

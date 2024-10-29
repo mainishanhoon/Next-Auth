@@ -4,6 +4,7 @@ import authConfig from '@/auth.config';
 import { prisma } from '@/utils/prisma';
 import { getUserById } from './utils/user';
 import { JWT } from 'next-auth/jwt';
+import { getTwoFactorConfirmationByUserId } from '@/actions/twoFactor';
 
 declare module 'next-auth/jwt' {
   interface JWT {
@@ -38,6 +39,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       const userExists = await getUserById(user.id);
       // Prevent signIn without email verification
       if (!userExists?.emailVerified) return false;
+
+      if (userExists.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          userExists.id,
+        );
+
+        if (!twoFactorConfirmation) return false;
+
+        // Delete two factor confirmation for next Sign In
+        await prisma.twoFactorConfirmation.delete({
+          where: { id: twoFactorConfirmation.id },
+        });
+      }
 
       return true;
     },

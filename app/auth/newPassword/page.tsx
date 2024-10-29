@@ -1,11 +1,11 @@
-import SignInForm from '@/components/forms/SignInForm';
+import NewPasswordForm from '@/components/forms/NewPasswordForm';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Suspense } from 'react';
 
-export default function SignInPage() {
+export default function NewPasswordPage() {
   return (
     <Suspense fallback={<Skeleton />}>
-      <SignInForm />
+      <NewPasswordForm />
     </Suspense>
   );
 }

@@ -13,16 +13,13 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-export default function VerificationTemplate(
-  name: string | null,
-  token: string,
-) {
-  const magicLink = `http://localhost:3000/auth/verification?token=${token}`;
+export default function ResetPasswordTemplate(token: string) {
+  const resetLink = `http://localhost:3000/auth/newPassword?token=${token}`;
 
   return (
     <Html>
       <Head />
-      <Preview>Verify your account with this magic link</Preview>
+      <Preview>Reset your password with this magic link</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
@@ -39,27 +36,28 @@ export default function VerificationTemplate(
             alt="Cover"
             style={cover}
           />
-          <Heading style={h1}>Welcome, {name}!</Heading>
+          <Heading style={h1}>Password Reset Request</Heading>
           <Text style={text}>
-            We're excited to have you on board. To get started, please verify
-            your account by clicking the button below.
+            We received a request to reset your password. If you didn't make
+            this request, you can safely ignore this email.
           </Text>
           <Section style={buttonContainer}>
-            <Button style={button} href={magicLink}>
-              Verify Your Account
+            <Button style={button} href={resetLink}>
+              Reset Your Password
             </Button>
           </Section>
           <Text style={text}>
             If the button doesn't work, you can also click on this link:
             <br />
-            <a href={magicLink} style={link}>
-              {magicLink}
+            <a href={resetLink} style={link}>
+              {resetLink}
             </a>
           </Text>
           <Hr style={hr} />
           <Text style={footer}>
             This email was sent by Next-Auth made by @mainishanhoon. If you
-            didn't request this email, you can safely ignore it.
+            didn't request a password reset, please ignore this email or contact
+            support if you have concerns.
           </Text>
         </Container>
       </Body>
