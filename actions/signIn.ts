@@ -6,10 +6,7 @@ import { getUserByEmail } from '@/utils/user';
 import { signIn } from '@/auth';
 import { SIGNIN_REDIRECT_ROUTE } from '@/routes';
 import { AuthError } from 'next-auth';
-import {
-  sendVerificationEmail,
-  sendTwoFactorAuthenticationEmail,
-} from '@/app/api/send/route';
+import { POST, sendTwoFactorAuthenticationEmail } from '@/app/api/send/route';
 import {
   generateVerificationToken,
   generateTwoFactorToken,
@@ -39,7 +36,7 @@ export async function SignIn(
   if (!userExists.emailVerified) {
     const verificationToken = await generateVerificationToken(userExists.email);
 
-    await sendVerificationEmail(
+    await POST(
       userExists.name,
       verificationToken.email,
       verificationToken.token,

@@ -5,7 +5,7 @@ import { SignUpSchema } from '@/schema/zod';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/utils/prisma';
 import { getUserByEmail } from '@/utils/user';
-import { sendVerificationEmail } from '@/app/api/send/route';
+import { POST } from '@/app/api/send/route';
 import { generateVerificationToken } from '@/lib/genToken';
 
 export async function SignUp(values: z.infer<typeof SignUpSchema>) {
@@ -35,11 +35,7 @@ export async function SignUp(values: z.infer<typeof SignUpSchema>) {
 
   const verificationToken = await generateVerificationToken(email);
 
-  await sendVerificationEmail(
-    name,
-    verificationToken.email,
-    verificationToken.token,
-  );
+  await POST(name, verificationToken.email, verificationToken.token);
 
   return { success: 'Confirmation Email Sent!!' };
 }
