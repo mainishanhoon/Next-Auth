@@ -5,11 +5,7 @@ import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { NavItems } from '@/constants/NavItems';
 
-interface NavBarProps {
-  onNavItemClick: () => void;
-}
-
-export default function NavBar({ onNavItemClick }: NavBarProps) {
+export default function NavBar() {
   const pathname = usePathname();
   return (
     <>
@@ -19,14 +15,13 @@ export default function NavBar({ onNavItemClick }: NavBarProps) {
           key={label.name}
           className={cn(
             pathname == label.href
-              ? 'bg-muted text-primary'
-              : 'bg-none text-muted-foreground',
-            'text-md flex items-center gap-2 rounded-lg px-3 py-2 font-bold tracking-wide transition-all hover:text-primary/70',
+              ? 'bg-primary/20 text-primary'
+              : 'bg-muted text-muted-foreground',
+            'text-md flex items-center mx-1 gap-2 rounded-lg px-3 py-2 font-bold tracking-wide transition-all hover:text-primary/70',
           )}
-          onClick={onNavItemClick}
         >
           <label.icon size={25} strokeWidth={3} />
-          {label.name}
+          <p className='hidden sm:block'>{label.name}</p>
         </Link>
       ))}
     </>

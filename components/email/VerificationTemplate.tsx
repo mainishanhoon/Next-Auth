@@ -14,10 +14,12 @@ import {
 import * as React from 'react';
 
 export default function VerificationTemplate(
-  name: string | null,
+  name: string | null | undefined,
   token: string,
 ) {
-  const magicLink = `http://localhost:3000/auth/verification?token=${token}`;
+  const domain = process.env.NEXT_PUBLIC_APP_URL;
+
+  const magicLink = `${domain}/auth/verification?token=${token}`;
 
   return (
     <Html>

@@ -28,9 +28,9 @@ export default function AuthWrapper({
   showSocial,
 }: AuthWrapperProps) {
   return (
-    <Card className="w-full max-w-md bg-muted shadow-md md:max-w-xl">
-      <div className="flex items-center justify-between p-3 px-4">
-        <div className='flex space-x-1 items-center'>
+    <Card className="border-2 max-w-md w-full bg-muted shadow-md md:max-w-xl">
+      <div className="flex items-center justify-between p-2 px-4">
+        <div className="flex items-center space-x-1">
           <LockKeyhole
             strokeWidth={3}
             className="size-10 rounded-xl bg-primary p-1.5 text-white"

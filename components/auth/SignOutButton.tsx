@@ -1,6 +1,6 @@
 'use client';
 
-import SignOut from '@/actions/signOut';
+import { SignOut } from '@/lib/actions';
 
 export default function SignOutButton({
   children,
@@ -11,7 +11,9 @@ export default function SignOutButton({
     SignOut();
   }
 
-  return <span onClick={onSubmit} className="cursor-pointer">
-    {children}
-  </span>;
+  return (
+    <span onClick={onSubmit} className="cursor-pointer">
+      {children}
+    </span>
+  );
 }

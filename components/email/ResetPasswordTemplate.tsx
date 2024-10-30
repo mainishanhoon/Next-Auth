@@ -14,7 +14,9 @@ import {
 import * as React from 'react';
 
 export default function ResetPasswordTemplate(token: string) {
-  const resetLink = `http://localhost:3000/auth/newPassword?token=${token}`;
+  const domain = process.env.NEXT_PUBLIC_APP_URL;
+
+  const resetLink = `${domain}/auth/newPassword?token=${token}`;
 
   return (
     <Html>

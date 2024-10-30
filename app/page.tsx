@@ -35,7 +35,7 @@ export default function Home() {
             </p>
           </div>
           <div className="flex space-x-4">
-            <SignInButton>
+            <SignInButton mode='modal' asChild>
               <Button
                 variant="default"
                 size="lg"

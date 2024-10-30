@@ -1,4 +1,4 @@
-import { Cog, OctagonAlert, ServerCog, UsersRound } from 'lucide-react';
+import { Cog, ServerCog, UserRoundCog, UsersRound } from 'lucide-react';
 
 export const NavItems = [
   {
@@ -14,7 +14,7 @@ export const NavItems = [
   {
     name: 'Admin',
     href: '/admin',
-    icon: OctagonAlert,
+    icon: UserRoundCog,
   },
   {
     name: 'Settings',

@@ -26,12 +26,12 @@ import Link from 'next/link';
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 
 export default function SignInForm() {
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl');
   const urlError =
     searchParams.get('error') === 'OAuthAccountNotLinked'
       ? 'User with this Email already exists'
@@ -54,7 +54,7 @@ export default function SignInForm() {
     setSuccess('');
 
     startTransition(() => {
-      SignIn(values)
+      SignIn(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset();

@@ -5,11 +5,15 @@ import { FcGoogle } from 'react-icons/fc';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
 import { SIGNIN_REDIRECT_ROUTE } from '@/routes';
+import { useSearchParams } from 'next/navigation';
 
 export default function Social() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl');
+
   const onClick = (provider: 'google' | 'github') => {
     signIn(provider, {
-      callbackUrl: SIGNIN_REDIRECT_ROUTE,
+      callbackUrl: callbackUrl || SIGNIN_REDIRECT_ROUTE,
     });
   };
 

@@ -1,22 +1,12 @@
-import NextAuth, { type DefaultSession } from 'next-auth';
+import NextAuth from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import authConfig from '@/auth.config';
 import { prisma } from '@/utils/prisma';
 import { getUserById } from './utils/user';
-import { JWT } from 'next-auth/jwt';
 import { getTwoFactorConfirmationByUserId } from '@/actions/twoFactor';
+import { Role } from '@prisma/client';
+import { getAccountByUserId } from './actions/account';
 
-declare module 'next-auth/jwt' {
-  interface JWT {
-    role?: string;
-  }
-}
-
-declare module 'next-auth' {
-  interface Session {
-    user: { role: string } & DefaultSession['user'];
-  }
-}
 export const { auth, handlers, signIn, signOut } = NextAuth({
   pages: {
     signIn: '/auth/signIn',
@@ -60,17 +50,38 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
+
       if (token.role && session.user) {
-        session.user.role = token.role;
+        session.user.role = token.role as Role;
       }
+
+      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+      }
+
+      if (session.user) {
+        session.user.name = token.name ?? '';
+        session.user.email = token.email ?? '';
+        session.user.isOAuth = token.isOAuth as boolean;
+      }
+
       return session;
     },
     async jwt({ token }) {
       if (!token.sub) return token;
+
       const userExists = await getUserById(token.sub);
-      if (userExists) {
-        token.role = userExists.role;
-      }
+
+      if (!userExists) return token;
+
+      const accountExists = await getAccountByUserId(userExists.id);
+
+      token.isOAuth = !!accountExists;
+      token.name = userExists.name;
+      token.email = userExists.email;
+      token.role = userExists.role;
+      token.isTwoFactorEnabled = userExists.isTwoFactorEnabled;
+
       return token;
     },
   },

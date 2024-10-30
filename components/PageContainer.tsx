@@ -12,7 +12,7 @@ export default function PageContainer({
     <>
       {scrollable ? (
         <ScrollArea>
-          <div className="h-full px-3.5">{children}</div>
+          <div className="h-full px-0.5">{children}</div>
         </ScrollArea>
       ) : (
         <div className="h-full p-4">{children}</div>

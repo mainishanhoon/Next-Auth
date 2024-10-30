@@ -18,7 +18,10 @@ import { prisma } from '@/utils/prisma';
 import { getTwoFactorConfirmationByUserId } from '@/actions/twoFactor';
 import { getTwoFactorTokenByEmail } from '@/utils/twoFactorToken';
 
-export async function SignIn(values: z.infer<typeof SignInSchema>) {
+export async function SignIn(
+  values: z.infer<typeof SignInSchema>,
+  callbackUrl?: string | null,
+) {
   const validatedFields = SignInSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -94,7 +97,7 @@ export async function SignIn(values: z.infer<typeof SignInSchema>) {
     await signIn('credentials', {
       email,
       password,
-      redirectTo: SIGNIN_REDIRECT_ROUTE,
+      redirectTo: callbackUrl || SIGNIN_REDIRECT_ROUTE,
     });
   } catch (error) {
     if (error instanceof AuthError) {
