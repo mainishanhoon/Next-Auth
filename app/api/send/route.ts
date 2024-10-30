@@ -5,66 +5,48 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function POST(
-  name: string | null | undefined,
-  email: string,
-  token: string,
-) {
+export async function POST(req: Request) {
   try {
+    const { type, name, email, token } = await req.json();
+
+    let subject = '';
+    let template;
+
+    switch (type) {
+      case 'verification':
+        subject = `${name}!! Verify Email`;
+        template = VerificationTemplate(name, token);
+        break;
+      case 'resetPassword':
+        subject = 'Reset your Password';
+        template = ResetPasswordTemplate(token);
+        break;
+      case 'twoFactorAuth':
+        subject = 'Two-Factor Authentication (2FA)';
+        template = OTPVerificationTemplate(token);
+        break;
+      default:
+        return new Response(
+          JSON.stringify({ error: 'Invalid email type provided' }),
+          { status: 400 },
+        );
+    }
+
     const { data, error } = await resend.emails.send({
       from: 'Next-Auth_v5 <onboarding@resend.dev>',
       to: email,
-      subject: `${name}!! Verify Email`,
-      react: VerificationTemplate(name, token),
+      subject,
+      react: template,
     });
 
     if (error) {
-      return Response.json({ error }, { status: 500 });
+      return new Response(JSON.stringify({ error }), { status: 500 });
     }
 
-    return Response.json(data);
+    return new Response(JSON.stringify(data), { status: 200 });
   } catch (error) {
-    return Response.json({ error }, { status: 500 });
-  }
-}
-
-export async function sendResetPasswordEmail(email: string, token: string) {
-  try {
-    const { data, error } = await resend.emails.send({
-      from: 'Next-Auth_v5 <onboarding@resend.dev>',
-      to: email,
-      subject: `Reset your Password`,
-      react: ResetPasswordTemplate(token),
+    return new Response(JSON.stringify({ error: 'Something went wrong' }), {
+      status: 500,
     });
-
-    if (error) {
-      return Response.json({ error }, { status: 500 });
-    }
-
-    return Response.json(data);
-  } catch (error) {
-    return Response.json({ error }, { status: 500 });
-  }
-}
-
-export async function sendTwoFactorAuthenticationEmail(
-  email: string,
-  token: string,
-) {
-  try {
-    const { data, error } = await resend.emails.send({
-      from: 'Next-Auth_v5 <onboarding@resend.dev>',
-      to: email,
-      subject: `Two-Factor Authenticaation (2FA)`,
-      react: OTPVerificationTemplate(token),
-    });
-
-    if (error) {
-      return Response.json({ error }, { status: 500 });
-    }
-
-    return Response.json(data);
-  } catch (error) {
-    return Response.json({ error }, { status: 500 });
   }
 }

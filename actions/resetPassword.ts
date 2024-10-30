@@ -4,7 +4,7 @@ import * as z from 'zod';
 import { ResetPasswordSchema } from '@/schema/zod';
 import { getUserByEmail } from '@/utils/user';
 import { generateResetPasswordToken } from '@/lib/genToken';
-import { sendResetPasswordEmail } from '@/app/api/send/route';
+import { POST } from '@/app/api/send/route';
 
 export async function ResetPassword(
   values: z.infer<typeof ResetPasswordSchema>,
@@ -25,9 +25,17 @@ export async function ResetPassword(
 
   const passwordResetToken = await generateResetPasswordToken(email);
 
-  await sendResetPasswordEmail(
-    passwordResetToken.email,
-    passwordResetToken.token,
+  await POST(
+    new Request('/api/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'resetPassword',
+        name: userExists.name,
+        email: passwordResetToken.email,
+        token: passwordResetToken.token,
+      }),
+    }),
   );
 
   return { success: 'Email Sent!' };

@@ -35,7 +35,18 @@ export async function Settings(values: z.infer<typeof SettingsSchema>) {
 
     const verificationToken = await generateVerificationToken(values.email);
 
-    await POST(user.name, verificationToken.email, verificationToken.token);
+    await POST(
+      new Request('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'verification',
+          name: values.name,
+          email: verificationToken.email,
+          token: verificationToken.token,
+        }),
+      }),
+    );
   }
 
   await prisma.user.update({

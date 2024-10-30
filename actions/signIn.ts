@@ -6,7 +6,7 @@ import { getUserByEmail } from '@/utils/user';
 import { signIn } from '@/auth';
 import { SIGNIN_REDIRECT_ROUTE } from '@/routes';
 import { AuthError } from 'next-auth';
-import { POST, sendTwoFactorAuthenticationEmail } from '@/app/api/send/route';
+import { POST } from '@/app/api/send/route';
 import {
   generateVerificationToken,
   generateTwoFactorToken,
@@ -37,9 +37,16 @@ export async function SignIn(
     const verificationToken = await generateVerificationToken(userExists.email);
 
     await POST(
-      userExists.name,
-      verificationToken.email,
-      verificationToken.token,
+      new Request('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'verification',
+          name: userExists.name,
+          email: verificationToken.email,
+          token: verificationToken.token,
+        }),
+      }),
     );
 
     return { success: 'Verification Email Sent!' };
@@ -82,9 +89,17 @@ export async function SignIn(
     } else {
       const twoFactorToken = await generateTwoFactorToken(userExists.email);
 
-      await sendTwoFactorAuthenticationEmail(
-        twoFactorToken.email,
-        twoFactorToken.token,
+      await POST(
+        new Request('/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'twoFactorAuth',
+            name: userExists.name,
+            email: twoFactorToken.email,
+            token: twoFactorToken.token,
+          }),
+        }),
       );
 
       return { twoFactor: true };

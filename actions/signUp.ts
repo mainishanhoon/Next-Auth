@@ -35,7 +35,17 @@ export async function SignUp(values: z.infer<typeof SignUpSchema>) {
 
   const verificationToken = await generateVerificationToken(email);
 
-  await POST(name, verificationToken.email, verificationToken.token);
-
+  await POST(
+    new Request('/api/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'verification',
+        name: values.name,
+        email: verificationToken.email,
+        token: verificationToken.token,
+      }),
+    }),
+  );
   return { success: 'Confirmation Email Sent!!' };
 }
