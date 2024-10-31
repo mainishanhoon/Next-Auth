@@ -21,6 +21,7 @@ This project leverages Auth.js for implementing authentication in a Next.js appl
 ![Home](https://github.com/user-attachments/assets/330899e8-9153-4d42-a532-1366d20ef64f)
 
 ### AuthTabs
-![AuthTabs](https://github.com/user-attachments/assets/3cbbe697-cf6a-41e6-b200-e6ec30b47eb4)
+![Auth Tabs](https://github.com/user-attachments/assets/3520fac2-029a-4aea-8df0-f61b467ca71a)
+
 
 
