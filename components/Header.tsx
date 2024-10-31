@@ -17,11 +17,9 @@ export default function Header() {
             <ShieldCheck
               size={35}
               color="hsl(var(--background))"
-              className="md:hidden rounded-sm bg-primary p-1 block"
+              className="rounded-sm bg-primary p-1"
             />
-            <p className="hidden font-bold tracking-wider md:block">
-              Next<span className="text-primary">Auth</span>
-            </p>
+
           </Link>
         </div>
 

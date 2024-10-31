@@ -28,7 +28,7 @@ export default function UserButton() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="end">
-        <SignOutButton>
+        <SignOutButton asChild>
           <DropdownMenuItem>
             <LogOut size={20} strokeWidth={3} className="mr-2" />
             Sign Out

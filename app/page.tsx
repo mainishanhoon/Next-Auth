@@ -4,6 +4,7 @@ import { LockKeyhole, LogIn } from 'lucide-react';
 import SignInButton from '@/components/auth/SignInButton';
 import ThemeToggle from '@/components/ThemeToggle';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -53,10 +54,57 @@ export default function Home() {
             </Link>
           </div>
           <ThemeToggle />
-          <div className="flex space-x-2 text-3xl font-bold">
-            <p>Prisma</p>
-            <p>Prisma</p>
-            <p>Prisma</p>
+          <div className="flex flex-wrap justify-center gap-5 py-10 lg:gap-10 text-3xl font-bold">
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/NextJS.webp"
+                alt=""
+                width={50}
+                height={50}
+                className="size-8 lg:size-12"
+              />
+              <p className="text-xl lg:text-3xl">Next.js</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/postgreSQL.webp"
+                alt=""
+                width={50}
+                height={50}
+                className="size-8 lg:size-12"
+              />
+              <p className="text-xl lg:text-3xl">postgreSQL</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/Prisma.webp"
+                alt=""
+                width={45}
+                height={45}
+                className="size-8 lg:size-12"
+              />
+              <p className="text-xl lg:text-3xl">Prisma</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/Neon.webp"
+                alt=""
+                width={45}
+                height={45}
+                className="size-8 lg:size-12"
+              />
+              <p className="text-xl lg:text-3xl">Neon</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/AuthJS.webp"
+                alt=""
+                width={45}
+                height={45}
+                className="size-8 lg:size-12"
+              />
+              <p className="text-xl lg:text-3xl">Auth.js</p>
+            </div>
           </div>
         </div>
       </div>
